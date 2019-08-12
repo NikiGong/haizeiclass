@@ -1,0 +1,6 @@
+ [INFO] 2019-08-12 07:21:12,021 [Thread-1:16000] [interface:8] [views:test_success] - info-1
+ [INFO] 2019-08-12 07:39:54,829 [Thread-1:16884] [interface:8] [views:test_success] - info-1
+ [INFO] 2019-08-12 17:07:19,481 [Thread-1:5072] [interface:8] [views:test_success] - info-1
+2019-08-12 17:10:07,348 [Thread-1:6200] [interface:8] [views:test_success] [INFO]- info-1
+2019-08-12 17:11:14,665 [Thread-1:13220] [interface:8] [views:test_success] [INFO]- info-1
+ [INFO] 2019-08-12 17:40:17,859 [Thread-1:5940] [interface:15] [views:test_success] - info-1

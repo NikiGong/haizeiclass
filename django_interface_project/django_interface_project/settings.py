@@ -37,17 +37,54 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'interface_main.apps.InterfaceMainConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  #  添加上这个中间件
+    'django.middleware.common.CommonMiddleware',  # 一定放在要在跨域中间件的后面
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'interface_main.middleware.my_middle_ware.MyMiddleWare',
 ]
+
+#跨域的配置
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    # '*'  # 只用*这里会报错
+ 'http://127.0.0.1:8080',
+ 'http://localhost:8080',
+ 'https://127.0.0.1:8080',
+ 'https://localhost:8080'
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+)
+
 
 ROOT_URLCONF = 'django_interface_project.urls'
 
@@ -120,6 +157,130 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGGING= {
+#日志设置
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': True,
+#     'formatters': {  # 日志输出的格式，可以定义多种
+#        'standard': {
+#             'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'
+#        }  #日志格式
+#     },
+#     'filters': {
+#     },
+#     'handlers': {
+#         'default': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, 'log/all.log'),     #日志输出文件
+#             'maxBytes': 1024*1024*5,                  #文件大小
+#             'backupCount': 5,                         #备份份数
+#             'formatter': 'standard',                   #使用哪种formatters日志格式
+#         },
+#         'error': {
+#             'level': 'ERROR',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, 'log/error.log'),
+#             'maxBytes': 1024*1024*5,
+#             'backupCount': 5,
+#             'formatter': 'standard',
+#         },
+#         'console':{  # 打印到控制台
+#             # 'level': 'DEBUG',
+#             'level': 'ERROR',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'standard'
+#         },
+#         'info': {
+#             'level': 'INFO',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, 'log/info.log'),
+#             'maxBytes': 1024*1024*5,
+#             'backupCount': 5,
+#             'formatter': 'standard',
+#         },
+#     },
+#     'loggers': {
+#         # 用来配置用哪种handlers来处理日志，比如你同时需要输出日志到文件、控制台。
+#
+#         'django': {
+#             'handlers': ['default', 'console'],  # "default"就是默认方式，"console"就是打印到控制台方式
+#             'level': 'DEBUG',
+#             'propagate': False
+#         },
+#         'django.request': {
+#             'handlers': ['default',  'console'],
+#             'level': 'DEBUG',
+#             'propagate': False,
+#         },
+#         'interface': {
+#             'handlers': ['info',  'console', 'error', 'default'],
+#             'level': 'DEBUG',
+#             'propagate': False,
+#         },
+#     }
+# }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'standard': {
+            'format': ' [%(levelname)s] %(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] - %(message)s'}
+    },
+    'filters': {
+    },
+    'handlers': {
+        'default': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/all.log'),     #日志输出文件
+            'maxBytes': 1024*1024*5,                  #文件大小
+            'backupCount': 5,                         #备份份数
+            'formatter':'standard',                   #使用哪种formatters日志格式
+        },
+        'error': {
+            'level':'ERROR',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/error.log'),
+            'maxBytes':1024*1024*5,
+            'backupCount': 5,
+            'formatter':'standard',
+        },
+        'console':{
+            # 'level': 'DEBUG',
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'info': {
+            'level':'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/info.log'),
+            'maxBytes': 1024*1024*5,
+            'backupCount': 5,
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['default', 'console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': [ 'default', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'interface': {
+            'handlers': ['default', 'info',  'console', 'error'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
 }
+
